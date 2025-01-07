@@ -58,7 +58,7 @@ def send_group_msg():
             boc_currency = boc_rate_objects[currency_code].currentRate
             icbc_currency = icbc_rate_objects[currency_code].currentRate
 
-            msg = f'📢汇率速递·{currency_name} 现汇卖出价📢\n中国银行：{boc_currency}\n工商银行：{icbc_currency}\n时间：{current_time} ⏰'
+            msg = f'📢汇率速递·{currency_name} 银行卖出价📢\n中国银行：{boc_currency}\n工商银行：{icbc_currency}\n时间：{current_time} ⏰'
 
             wx.send_msg(group_name, [msg], [])
 
@@ -71,6 +71,8 @@ scheduler = BlockingScheduler()
 
 # 添加任务，使用 Cron 表达式
 # 表示每分钟的第 0 秒执行
-scheduler.add_job(send_group_msg, trigger=CronTrigger.from_crontab("0 6-23 * * 1-5"))
-scheduler.add_job(send_group_msg, trigger=CronTrigger.from_crontab("0 6 * * 0,6"))
+scheduler.add_job(send_group_msg, trigger=CronTrigger.from_crontab("0 6-23 * * 0-4"))
+scheduler.add_job(send_group_msg, trigger=CronTrigger.from_crontab("0 6 * * 5,6"))
 scheduler.start()
+current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+print(f'项目启动 {current_time}')
